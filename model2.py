@@ -15,8 +15,8 @@ from langchain.llms import HuggingFacePipeline
 from dotenv import load_dotenv
 load_dotenv()
 
-headers = {"Authorization": "Bearer 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"}
-api_key = "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"  # Replace with your actual Hugging Face API key
+headers = {"Authorization": "Bearer [APIKEY]"}
+api_key = "[APIKEY]"  # Replace with your actual Hugging Face API key
 
 import os
 dir = os.getcwd()
@@ -54,7 +54,7 @@ def getRetriever(dir):
     retriever = vectorDB.as_retriever(search_type="similarity", search_kwargs={"k": 3})
     return retriever
 
-headers = {"Authorization": "Bearer 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"}
+headers = {"Authorization": "Bearer [APIKEY]"}
 
 
 from huggingface_hub import InferenceClient
