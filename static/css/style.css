@@ -85,4 +85,16 @@ button,
     border: none;
     padding: 0.5em 1em;
     text-transform: uppercase;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Disabled button styling */
+button:disabled,
+.btn:disabled {
+    background-color: #cccccc;
+    /* Light gray for disabled state */
+    color: #999999;
+    /* Dimmed text color */
+    cursor: not-allowed;
+    /* Show a "not allowed" cursor */
 }

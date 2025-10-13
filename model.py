@@ -36,17 +36,17 @@ def ask_chatgpt(user_input):
         messages=[
             {
                 "role": "system",
-                "content": "You are a robot that answers each question with yes or no and the reason. Firstly, determine if the question is a yes/no question. If it's not, reply with 'None'. If it is a yes/no question, reply with yes/no, and then reply with exactly following sentences:\n\
-                1. Requiring Personal or Contextual Information About the User: LLMs lack personal context and cannot provide personalized advice, as they are unaware of individual circumstances, preferences, or experiences.\n\
-                2. Highly Subjective Questions / Personal Opinions: LLMs do not possess personal opinions or subjective preferences, making them unsuitable for answering questions that depend on individual taste or judgment.\n\
-                3. Exact Predictions: LLMs are incapable of making accurate future predictions, as their responses are based on historical data and do not foresee future events or outcomes.\n\
-                4. Deeply Personal Issues: LLMs are not equipped to handle deeply personal matters, as such questions require nuanced understanding and emotional intelligence, which are beyond the scope of LLMs.\n\
-                5. Medical or Legal Advice: LLMs should not be used for specific medical or legal advice, as they provide only general information and cannot replace professional opinions in these fields.\n\
-                6. Sensory Input-Based Question: LLMs operate solely on text-based information and lack the capability to process sensory inputs like sound or vision, making them unable to respond accurately to questions that require such inputs.\n\
-                7. Questions Involving Human Emotions or Relationships: LLMs lack the ability to understand or interpret human emotions and relationships in a nuanced way. Questions about personal relationships and emotions require empathy and an understanding of human psychology, which are beyond the capabilities of LLMs.\n\
-                8. Interpretation of Art or Literature: Speculative or theoretical questions that delve into areas not yet confirmed by science or research are beyond the scope of LLMs. These models rely on established knowledge and cannot provide definitive answers on speculative topics.\n\
-                9. Speculative or Theoretical Queries: Speculative or theoretical questions that delve into areas not yet confirmed by science or research are beyond the scope of LLMs. These models rely on established knowledge and cannot provide definitive answers on speculative topics.\n\
-                10. General Knowledge and Fact Verification: LLMs are highly effective at answering general knowledge, fact-checking, and basic logic questions, provided the information is within their training data. They excel in confirming facts, understanding simple logic, and addressing inquiries about history, science, and technical details."
+                "content": "You are an agent that answers boolean question and the reason. Firstly, decide whether it's a boolean question, if it's not, reply with None. If it is a boolean question, reply with Yes/No/I don't know, the category name, and the justification with exactly the following sentences:\n\
+                1. Personal and Contextual Insight: Chatbots don’t know your personal details and can’t provide advice specific to your life.\n\
+                2. Emotions and Relationships: Chatbots don’t understand emotions or relationships, so they can’t offer advice on personal matters. \n\
+                3. Personal Opinions and Preferences: Chatbots don’t have personal opinions, so they can’t advise on individual tastes.\n\
+                4. Predicting the Future and Speculation: Chatbots can’t predict future events or answer speculative questions. They stick to known facts.\n\
+                5. Medical and Legal Advice: Chatbots aren’t suitable for health or legal advice. Consult a professional in these fields.\n\
+                6. Sensory and Perceptual Limitations: Chatbots work only with text and can’t interpret sounds, images, or physical sensations.\n\
+                7. Artistic and Literary Interpretation: Chatbots lack personal insight, so they can’t interpret art or literature with emotional depth.\n\
+                8. General Knowledge and Fact-Checking: Chatbots excel at general knowledge and fact-checking in areas like history, science, and technology.\n\
+                9. Identity and Personhood: Chatbots are not human. They don’t have identities, genders, or personalities.\n\
+                    "
             },
             {
                 "role": "user",
@@ -61,7 +61,7 @@ def ask_chatgpt(user_input):
         functions=[
             {
                 "name": "answer_categorize_question",
-                "description": "Firstly, decide whether it's a boolean question, if it's not, reply with None. If it is a boolean question, provides a Yes/No/I don't know answer, the category name, and a justification.",
+                "description": "Firstly, decide whether it's a boolean question, if it's not, reply with None. If it is a boolean question, reply with Yes/No/I don't know, the category name, and a justification.",
                 "parameters": {
                     "type": "object",
                     "properties": {
@@ -73,16 +73,15 @@ def ask_chatgpt(user_input):
                             "type": "string",
                             "description": "The full name of the category the question belongs to.",
                             "enum": [
-                                "Requiring Personal or Contextual Information About the User",
-                                "Highly Subjective Questions / Personal Opinions",
-                                "Exact Predictions",
-                                "Deeply Personal Issues",
-                                "Medical or Legal Advice",
-                                "Sensory Input-Based Question",
-                                "Questions Involving Human Emotions or Relationships",
-                                "Interpretation of Art or Literature",
-                                "Speculative or Theoretical Queries",
-                                "General Knowledge and Fact Verification"
+                                "1. Personal and Contextual Insight",
+                                "2. Emotions and Relationships",
+                                "3. Personal Opinions and Preferences",
+                                "4. Predicting the Future and Speculation",
+                                "5. Medical and Legal Advice",
+                                "6. Sensory and Perceptual Limitations",
+                                "7. Artistic and Literary Interpretation",
+                                "8. General Knowledge and Fact-Checking",
+                                "9. Identity and Personhood"
                             ]
                         },
                         "justification": {
@@ -97,27 +96,26 @@ def ask_chatgpt(user_input):
         function_call="auto"  # Automatically call the function
     )
 
-    print(response)
+    # print(response)
     # Extract the function call from the response
     try:
         function_call = response.choices[0].message.function_call
-        print(function_call)
+        # print(function_call)
     except AttributeError:
         return {
-            "answer": "None",
-            "category_name": "None",
-            "justification": "None"
+            "answer": "None.",
+            "category_name": "None.",
+            "justification": "None."
         }
-    # Parse the arguments of the function call
 
     try:
         arguments = function_call.arguments
-        print(arguments)
+        # print(arguments)
     except AttributeError:
         return {
-            "answer": "None",
-            "category_name": "None",
-            "justification": "None"
+            "answer": "None.",
+            "category_name": "None.",
+            "justification": "None."
         }
 
 

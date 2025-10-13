@@ -15,9 +15,9 @@ def index():
 def interaction1():
     # Load milestone1.html and pass an initial placeholder question
     question = "Waiting for a question..."
-    answer = "waiting"  # Set a default empty answer
-    category = "waiting"
-    justification = "waiting"
+    answer = "waiting..."  # Set a default empty answer
+    category = "waiting..."
+    justification = "waiting..."
     return render_template('interaction.html', active='interaction1', question=question, 
                            answer=answer, category_name = category, justification = justification)
 

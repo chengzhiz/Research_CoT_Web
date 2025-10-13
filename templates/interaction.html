@@ -3,18 +3,16 @@
 <div class="container">
   <br>
   <div class="row justify-content-center">
-    <!-- First Card -->
     <div class="col-md-4">
       <div class="card text-left mb-3" style="width: 100%;">
         <div class="card-body">
           <h5 class="card-title">Prompt A Question</h5>
           <p class="card-text">Please hit the button for voice input</p>
-          <a href="#" class="btn btn-primary" onmousedown="startListening()" onmouseup="stopListening()">Press to
-            speak</a>
+          <a href="#" id="speak-btn" class="btn btn-primary" onmousedown="startListening()" onmouseup="stopListening()">
+            Press to speak
+          </a>
           <p class="card-text" id="voice-input"></p>
-          <p class="card-text" id="question">
-            Waiting for a question...
-          </p>
+          <p class="card-text" id="question">Waiting for a question...</p>
           <p class="card-text"><strong>Answer:</strong> <span id="answer">{{ answer }}</span></p>
           <p class="card-text"><strong>Category:</strong> <span id="category_name">{{ category_name }}</span></p>
           <p class="card-text"><strong>Justification:</strong> <span id="justification">{{ justification }}</span></p>
@@ -32,51 +30,44 @@
   </div>
 </div>
 
-<!-- Audio elements for voice files -->
-<audio id="intro-audio" src="{{ url_for('static', filename='voice/intro.wav') }}" preload="auto"></audio>
+<audio id="intro-audio" src="{{ url_for('static', filename='voice/intro.wav') }}" preload="auto" loop></audio>
 <audio id="yes-audio" src="{{ url_for('static', filename='voice/yes.wav') }}" preload="auto"></audio>
 <audio id="no-audio" src="{{ url_for('static', filename='voice/no.wav') }}" preload="auto"></audio>
 <audio id="idk-audio" src="{{ url_for('static', filename='voice/idk.wav') }}" preload="auto"></audio>
 <audio id="reask-audio" src="{{ url_for('static', filename='voice/reask.wav') }}" preload="auto"></audio>
 
 <script>
-  // Initialize SpeechRecognition
   let recognition;
   let isListening = false;
+  const speakBtn = document.getElementById("speak-btn");
 
   if ('webkitSpeechRecognition' in window) {
-    recognition = new webkitSpeechRecognition(); // Using Google Web Speech API
-  } else {
-    alert('Your browser does not support Google Web Speech API. Please use Chrome.');
-  }
-
-  if (recognition) {
-    recognition.continuous = false; // Stop listening after a phrase
-    recognition.interimResults = false; // Only provide final results
-    recognition.lang = 'en-US'; // Set language to English (US)
+    recognition = new webkitSpeechRecognition();
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    recognition.lang = 'en-US';
 
     recognition.onresult = function (event) {
       const transcript = event.results[0][0].transcript;
-
-      // Format the transcript: Capitalize the first letter and add a question mark
       const formattedTranscript = transcript.charAt(0).toUpperCase() + transcript.slice(1).trim() + "?";
-
-      // Update the voice-input and question elements
-      document.getElementById('question').innerText = formattedTranscript; // Replace default text
-
-      // Automatically call askChatGPT
+      document.getElementById('question').innerText = formattedTranscript;
+      stopListening();
+      disableSpeakBtn(12); // Disable button for 10 seconds
       askChatGPT();
     };
 
     recognition.onerror = function (event) {
       console.error('Speech Recognition Error:', event.error);
     };
+  } else {
+    alert('Your browser does not support Google Web Speech API. Please use Chrome.');
   }
 
   function startListening() {
     if (!recognition || isListening) return;
     isListening = true;
     recognition.start();
+    document.getElementById('intro-audio').pause();
   }
 
   function stopListening() {
@@ -85,7 +76,43 @@
     recognition.stop();
   }
 
-  // JavaScript function to call ask_chatgpt with the question
+  function disableSpeakBtn(seconds) {
+    speakBtn.disabled = true;
+    speakBtn.classList.add("disabled"); // Ensure disabled styles apply
+    setTimeout(() => {
+      speakBtn.disabled = false;
+      speakBtn.classList.remove("disabled"); // Remove disabled styles
+      resetInterface();
+    }, seconds * 1000);
+  }
+
+
+  function checkAndPlayAudio() {
+    const answer = document.getElementById('answer').innerText.trim();
+    document.querySelectorAll('audio').forEach(audio => audio.pause());
+    console.log(answer);
+
+    switch (answer) {
+      case 'Yes.':
+        document.getElementById('yes-audio').play();
+        break;
+      case 'No.':
+        document.getElementById('no-audio').play();
+        break;
+      case "I don't know.":
+        document.getElementById('idk-audio').play();
+        break;
+      case 'None.':
+        document.getElementById('reask-audio').play();
+        break;
+    }
+  }
+
+  const observer = new MutationObserver(checkAndPlayAudio);
+  observer.observe(document.getElementById('answer'), { childList: true });
+
+  document.getElementById('intro-audio').play();
+
   function askChatGPT() {
     const userQuestion = document.getElementById('question').innerText;
 
@@ -96,15 +123,43 @@
       },
       body: JSON.stringify({ question: userQuestion }),
     })
-      .then((response) => response.json())
-      .then((data) => {
-        document.getElementById('answer').innerText = data.answer;
-        document.getElementById('category_name').innerText = data.category_name;
-        document.getElementById('justification').innerText = data.justification;
+      .then(response => response.json())
+      .then(data => {
+        const answer = data.answer.trim();
+        document.getElementById('answer').innerText = answer;
+
+        // Only update category_name and justification if the answer is not "None."
+        if (answer !== 'None.') {
+          document.getElementById('category_name').innerText = data.category_name;
+          document.getElementById('justification').innerText = data.justification;
+        } else {
+          document.getElementById('category_name').innerText = "waiting...";
+          document.getElementById('justification').innerText = "waiting...";
+        }
       })
-      .catch((error) => console.error('Error retrieving answer:', error));
+      .catch(error => console.error('Error retrieving answer:', error));
   }
 
-  // Audio playback logic remains unchanged
+  function resetInterface() {
+    document.getElementById('question').innerText = "Waiting for a question...";
+    document.getElementById('answer').innerText = "waiting...";
+    document.getElementById('category_name').innerText = "waiting...";
+    document.getElementById('justification').innerText = "waiting...";
+
+    const introAudio = document.getElementById('intro-audio');
+
+    // Stop and reset the audio safely
+    introAudio.pause();
+    introAudio.currentTime = 0;
+
+    // Play the intro audio after a 1-second delay
+    setTimeout(() => {
+      introAudio.play().catch(error => {
+        console.error('Error playing intro audio:', error);
+      });
+    }, 1000); // 1-second delay
+  }
+
 </script>
+
 {% endblock %}
