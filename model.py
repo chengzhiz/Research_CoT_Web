@@ -10,7 +10,7 @@ import requests
 
 # https://huggingface.co/google/flan-t5-large?text=Please+give+me+a+simple+question+that+normal+people+ask+a+robot+that+can+be+answered+with+yes%2Fno.
 API_URL = "https://api-inference.huggingface.co/models/google/flan-t5-large"
-headers = {"Authorization": "Bearer [APIKEY]"}
+headers = {"Authorization": "Bearer {OPENAI_API_KEY}"}
 
 api_key = os.getenv("OPENAI_API_KEY")
 
