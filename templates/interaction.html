@@ -52,7 +52,7 @@
       const formattedTranscript = transcript.charAt(0).toUpperCase() + transcript.slice(1).trim() + "?";
       document.getElementById('question').innerText = "You asked: " + formattedTranscript;
       stopListening();
-      disableSpeakBtn(12); // Disable button for 10 seconds
+      disableSpeakBtn(16); // Disable button for 10 seconds
       askChatGPT();
     };
 
@@ -157,7 +157,7 @@
       introAudio.play().catch(error => {
         console.error('Error playing intro audio:', error);
       });
-    }, 1000); // 1-second delay
+    }, 3000); // 1-second delay
   }
 
 </script>
