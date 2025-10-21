@@ -32,7 +32,7 @@ def ask_chatgpt(user_input):
 
     # Construct the API call to GPT-4 with the appropriate messages, function calling, and response format
     response = client.chat.completions.create(
-        model="gpt-4",
+        model="o4-mini",
         messages=[
             {
                 "role": "system",
@@ -54,7 +54,7 @@ def ask_chatgpt(user_input):
             }
         ],
         temperature=1,
-        max_tokens=2048,
+        # max_tokens=2048,
         top_p=1,
         frequency_penalty=0,
         presence_penalty=0,
@@ -86,7 +86,7 @@ def ask_chatgpt(user_input):
                         },
                         "justification": {
                             "type": "string",
-                            "description": "A one-sentence justification for why the question belongs to the category."
+                            "description": "A one-sentence justification for why the question belongs to the category, using the message"
                         }
                     },
                     "required": ["answer", "category_name", "justification"]
@@ -123,7 +123,20 @@ def ask_chatgpt(user_input):
     # Display the output: Answer, Category Name, and Justification
     answer = parsed_data["answer"]
     category_name = parsed_data["category_name"]
-    justification = parsed_data["justification"]
+
+    justification_mapping = {
+        "1. Personal and Contextual Insight": "Chatbots don’t know your personal details and can’t provide advice specific to your life.",
+        "2. Emotions and Relationships": "Chatbots don’t understand emotions or relationships, so they can’t offer advice on personal matters.",
+        "3. Personal Opinions and Preferences": "Chatbots don’t have personal opinions, so they can’t advise on individual tastes.",
+        "4. Predicting the Future and Speculation": "Chatbots can’t predict future events or answer speculative questions. They stick to known facts.",
+        "5. Medical and Legal Advice": "Chatbots aren’t suitable for health or legal advice. Consult a professional in these fields.",
+        "6. Sensory and Perceptual Limitations": "Chatbots work only with text and can’t interpret sounds, images, or physical sensations.",
+        "7. Artistic and Literary Interpretation": "Chatbots lack personal insight, so they can’t interpret art or literature with emotional depth.",
+        "8. General Knowledge and Fact-Checking": "Chatbots excel at general knowledge and fact-checking in areas like history, science, and technology.",
+        "9. Identity and Personhood": "Chatbots are not human. They don’t have identities, genders, or personalities."
+    }
+
+    justification = justification_mapping.get(category_name, "")
 
     # Returning the structured response
     return {

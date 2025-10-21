@@ -6,10 +6,10 @@
     <div class="col-md-4">
       <div class="card text-left mb-3" style="width: 100%;">
         <div class="card-body">
-          <h5 class="card-title">Prompt A Question</h5>
+          <h5 class="card-title">Ask a yes-or-no Question</h5>
           <p class="card-text">Please hit the button for voice input</p>
           <a href="#" id="speak-btn" class="btn btn-primary" onmousedown="startListening()" onmouseup="stopListening()">
-            Press to speak
+            Press and hold to speak
           </a>
           <p class="card-text" id="voice-input"></p>
           <p class="card-text" id="question">Waiting for a question...</p>
@@ -50,7 +50,7 @@
     recognition.onresult = function (event) {
       const transcript = event.results[0][0].transcript;
       const formattedTranscript = transcript.charAt(0).toUpperCase() + transcript.slice(1).trim() + "?";
-      document.getElementById('question').innerText = formattedTranscript;
+      document.getElementById('question').innerText = "You asked: " + formattedTranscript;
       stopListening();
       disableSpeakBtn(12); // Disable button for 10 seconds
       askChatGPT();
