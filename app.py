@@ -18,8 +18,8 @@ def interaction1():
     answer = "waiting..."  # Set a default empty answer
     category = "waiting..."
     justification = "waiting..."
-    return render_template('interaction.html', active='interaction1', question=question, 
-                           answer=answer, category_name = category, justification = justification)
+    return render_template('interaction.html', active='interaction1', question = question, 
+                           answer = answer, category_name = category, justification = justification)
 
 # New route to handle the ChatGPT question
 @app.route('/ask-chatgpt', methods=['POST'])

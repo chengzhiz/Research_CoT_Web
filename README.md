@@ -16,7 +16,10 @@ To run the tool locally download the code and follow the steps below:
         - to activate the virtual envirnoment- `virtualenv .venv`
     - note- ".venv" is the name of the environment, so you can use whatever name you want.
         - for chengzhi: `/Users/czhang694/Documents/Research_CoT_Web/.venv/bin/activate`
+        - OR: chmod +x /Users/czhang694/Documents/Research_CoT_Web/.venv/bin/activate
+        and source /Users/czhang694/Documents/Research_CoT_Web/.venv/bin/activate
         - then : `flask run --host=0.0.0.0 --port=5000`
+        - or: `flask run --host=0.0.0.0 --port=5000 --debug`
 
 - Once the virtual environment is active then (* only if you are running the app for the first time/or there is a change in requirements.txt on the device, otherwise skip this step*) `pip install -r requirements.txt`
 

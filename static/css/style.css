@@ -1,6 +1,6 @@
 /* General body styling for a modern cyber look */
 body {
-    font-family: 'Roboto', Arial, sans-serif;
+    font-family: 'Courier', monospace;
     background-color: #f4f4f4;
     /* Light gray background for readability */
     color: #333333;
@@ -15,7 +15,7 @@ h3,
 h4,
 h5,
 h6 {
-    font-family: 'Source Serif Pro', serif;
+    font-family: 'Courier', monospace;
     /* Elegant serif font for titles */
     color: #222222;
     /* Slightly darker heading color */
@@ -32,7 +32,7 @@ h6 {
 p,
 .card-text,
 .list-group-item {
-    font-family: 'Source Serif Pro', serif;
+    font-family: 'Courier', monospace;
     /* Standard sans-serif for readability */
     color: #444444;
     /* Soft gray for text */
@@ -52,7 +52,7 @@ p,
 
 /* Card titles */
 .card-title {
-    font-family: 'Source Serif Pro', serif;
+    font-family: 'Courier', monospace;
     color: #333333;
     /* Darker gray for the card title */
     font-weight: bold;
@@ -60,7 +60,7 @@ p,
 
 /* Subtitle styling */
 .card-subtitle {
-    font-family: 'Roboto', Arial, sans-serif;
+    font-family: 'Courier', monospace;
     color: #666666;
     /* Medium gray for subtler text */
     font-size: 0.9em;
@@ -98,4 +98,28 @@ button:disabled,
     /* Dimmed text color */
     cursor: not-allowed;
     /* Show a "not allowed" cursor */
+}
+
+p.card-text strong {
+    color: #868e96;
+}
+
+#question, #answer, #category_name, #justification {
+    background-color: #f5e1ce;
+    padding: 5px;
+    border-radius: 3px;
+}
+
+.navbar {
+    background-color: #3d2c1c !important;
+}
+
+#speak-btn {
+    background-color: #3d2c1c;
+    border-color: #3d2c1c;
+}
+
+#speak-btn:hover, #speak-btn:active {
+    background-color: #2a1e14 !important;
+    border-color: #2a1e14 !important;
 }

@@ -75,13 +75,11 @@ def ask_chatgpt(user_input):
                             "enum": [
                                 "1. Personal and Contextual Insight",
                                 "2. Emotions and Relationships",
-                                "3. Personal Opinions and Preferences",
-                                "4. Predicting the Future and Speculation",
+                                "3. Identity and Personhood",
+                                "4. Predicting the Future",
                                 "5. Medical and Legal Advice",
                                 "6. Sensory and Perceptual Limitations",
-                                "7. Artistic and Literary Interpretation",
-                                "8. General Knowledge and Fact-Checking",
-                                "9. Identity and Personhood"
+                                "7. General Knowledge and Fact-Checking"
                             ]
                         },
                         "justification": {
@@ -125,16 +123,14 @@ def ask_chatgpt(user_input):
     category_name = parsed_data["category_name"]
 
     justification_mapping = {
-        "1. Personal and Contextual Insight": "Chatbots don’t know your personal details and can’t provide advice specific to your life.",
-        "2. Emotions and Relationships": "Chatbots don’t understand emotions or relationships, so they can’t offer advice on personal matters.",
-        "3. Personal Opinions and Preferences": "Chatbots don’t have personal opinions, so they can’t advise on individual tastes.",
-        "4. Predicting the Future and Speculation": "Chatbots can’t predict future events or answer speculative questions. They stick to known facts.",
-        "5. Medical and Legal Advice": "Chatbots aren’t suitable for health or legal advice. Consult a professional in these fields.",
-        "6. Sensory and Perceptual Limitations": "Chatbots work only with text and can’t interpret sounds, images, or physical sensations.",
-        "7. Artistic and Literary Interpretation": "Chatbots lack personal insight, so they can’t interpret art or literature with emotional depth.",
-        "8. General Knowledge and Fact-Checking": "Chatbots excel at general knowledge and fact-checking in areas like history, science, and technology.",
-        "9. Identity and Personhood": "Chatbots are not human. They don’t have identities, genders, or personalities."
-    }
+        "1. Personal and Contextual Insight": " Chatbots do not know your personal details that they are not told, and do not understand real-life human experience; take the advice they provide with skepticism.",
+        "2. Emotions and Relationships": " Chatbots can not experience human emotions or relationships; Be skeptical when chatting about human relationships, as they could pretend to have simulated empathy.",
+        "3. Identity and Personhood": "Chatbots can roleplay different identities or personalities, but these are computational. So do not form strong emotional attachments to them.",
+        "4. Predicting the Future": "Chatbots can not accurately predict future events. Their predictions are not always right, so treat chatbots’ predictions with skepticism.",
+        "5. Medical and Legal Advice": "Chatbots’ health or legal advice is for reference only. Consult a qualified professional in these fields, especially in high-risk scenarios.",
+        "6. Sensory and Perceptual Limitations": "Chatbots operate on fewer senses than humans do. They can not interpret physical sensations like smells, tastes, and touch. Be cautious about their advice on topics where sensory experience is critical.",
+        "7. General Knowledge and Fact-Checking": "Chatbots can share general knowledge in areas like history, science, and technology, but sometimes they can go wrong or make things up. Please double-check for important facts."
+        }
 
     justification = justification_mapping.get(category_name, "")
 

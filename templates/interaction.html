@@ -35,6 +35,13 @@
 <audio id="no-audio" src="{{ url_for('static', filename='voice/no.wav') }}" preload="auto"></audio>
 <audio id="idk-audio" src="{{ url_for('static', filename='voice/idk.wav') }}" preload="auto"></audio>
 <audio id="reask-audio" src="{{ url_for('static', filename='voice/reask.wav') }}" preload="auto"></audio>
+<audio id="1-audio" src="{{ url_for('static', filename='voice/1.wav') }}" preload="auto"></audio>
+<audio id="2-audio" src="{{ url_for('static', filename='voice/2.wav') }}" preload="auto"></audio>
+<audio id="3-audio" src="{{ url_for('static', filename='voice/3.wav') }}" preload="auto"></audio>
+<audio id="4-audio" src="{{ url_for('static', filename='voice/4.wav') }}" preload="auto"></audio>
+<audio id="5-audio" src="{{ url_for('static', filename='voice/5.wav') }}" preload="auto"></audio>
+<audio id="6-audio" src="{{ url_for('static', filename='voice/6.wav') }}" preload="auto"></audio>
+<audio id="7-audio" src="{{ url_for('static', filename='voice/7.wav') }}" preload="auto"></audio>
 
 <script>
   let recognition;
@@ -52,12 +59,13 @@
       const formattedTranscript = transcript.charAt(0).toUpperCase() + transcript.slice(1).trim() + "?";
       document.getElementById('question').innerText = "You asked: " + formattedTranscript;
       stopListening();
-      disableSpeakBtn(16); // Disable button for 10 seconds
       askChatGPT();
     };
 
     recognition.onerror = function (event) {
       console.error('Speech Recognition Error:', event.error);
+      speakBtn.disabled = false;
+      speakBtn.classList.remove("disabled");
     };
   } else {
     alert('Your browser does not support Google Web Speech API. Please use Chrome.');
@@ -66,8 +74,10 @@
   function startListening() {
     if (!recognition || isListening) return;
     isListening = true;
+    speakBtn.disabled = true;
+    speakBtn.classList.add("disabled");
     recognition.start();
-    document.getElementById('intro-audio').pause();
+    document.querySelectorAll('audio').forEach(audio => audio.pause());
   }
 
   function stopListening() {
@@ -76,20 +86,9 @@
     recognition.stop();
   }
 
-  function disableSpeakBtn(seconds) {
-    speakBtn.disabled = true;
-    speakBtn.classList.add("disabled"); // Ensure disabled styles apply
-    setTimeout(() => {
-      speakBtn.disabled = false;
-      speakBtn.classList.remove("disabled"); // Remove disabled styles
-      resetInterface();
-    }, seconds * 1000);
-  }
-
-
   function checkAndPlayAudio() {
-    const answer = document.getElementById('answer').innerText.trim();
-    document.querySelectorAll('audio').forEach(audio => audio.pause());
+    const answer = document.getElementById('answer').innerText.trim(); //remove the empty texts before and after
+    document.querySelectorAll('audio').forEach(audio => audio.pause()); // stop all auddio files
     console.log(answer);
 
     switch (answer) {
@@ -110,6 +109,33 @@
 
   const observer = new MutationObserver(checkAndPlayAudio);
   observer.observe(document.getElementById('answer'), { childList: true });
+
+  function playCategoryAudio() {
+    const categoryName = document.getElementById('category_name').innerText.trim();
+    if (categoryName && categoryName !== 'waiting...') {
+      const category = categoryName.charAt(0);
+      const audio = document.getElementById(category + '-audio');
+      if (audio) {
+        audio.play();
+      } else {
+        // If there is no category audio, reset the interface
+        resetInterface();
+      }
+    }
+  }
+
+  document.getElementById('yes-audio').addEventListener('ended', playCategoryAudio);
+  document.getElementById('no-audio').addEventListener('ended', playCategoryAudio);
+  document.getElementById('idk-audio').addEventListener('ended', playCategoryAudio);
+
+  for (let i = 1; i <= 7; i++) {
+    const audio = document.getElementById(i + '-audio');
+    if (audio) {
+        audio.addEventListener('ended', resetInterface);
+    }
+  }
+  document.getElementById('reask-audio').addEventListener('ended', resetInterface);
+
 
   document.getElementById('intro-audio').play();
 
@@ -137,7 +163,10 @@
           document.getElementById('justification').innerText = "waiting...";
         }
       })
-      .catch(error => console.error('Error retrieving answer:', error));
+      .catch(error => {
+        console.error('Error retrieving answer:', error)
+        resetInterface();
+      });
   }
 
   function resetInterface() {
@@ -152,12 +181,15 @@
     introAudio.pause();
     introAudio.currentTime = 0;
 
-    // Play the intro audio after a 1-second delay
+    // Play the intro audio after a 3-second delay
     setTimeout(() => {
       introAudio.play().catch(error => {
         console.error('Error playing intro audio:', error);
       });
-    }, 3000); // 1-second delay
+    }, 3000);
+    
+    speakBtn.disabled = false;
+    speakBtn.classList.remove("disabled");
   }
 
 </script>
