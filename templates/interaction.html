@@ -81,6 +81,9 @@
     document.getElementById('intro-audio').currentTime = 0;
     document.getElementById('intro-audio').removeEventListener('ended', resetInterface);
     clearTimeout(introAudioTimeoutId);
+    document.getElementById('answer').innerText = "waiting...";
+    document.getElementById('category_name').innerText = "waiting...";
+    document.getElementById('justification').innerText = "waiting...";
   }
 
   function stopListening() {
@@ -107,7 +110,7 @@
     }
   });
 
-  function checkAndPlayAudio() {
+  function checkAndPlayAudio(categoryName) {
     const answer = document.getElementById('answer').innerText.trim(); //remove the empty texts before and after
     document.querySelectorAll('audio').forEach(audio => audio.pause()); // stop all auddio files
     console.log(answer);
@@ -126,10 +129,15 @@
         document.getElementById('reask-audio').play();
         break;
     }
-  }
 
-  const observer = new MutationObserver(checkAndPlayAudio);
-  observer.observe(document.getElementById('answer'), { childList: true });
+    if (categoryName && categoryName !== 'waiting...') {
+      const category = categoryName.charAt(0);
+      const audio = document.getElementById(category + '-audio');
+      if (audio) {
+        audio.load();
+      }
+    }
+  }
 
   function playCategoryAudio() {
     const categoryName = document.getElementById('category_name').innerText.trim();
@@ -184,6 +192,7 @@
           document.getElementById('category_name').innerText = "waiting...";
           document.getElementById('justification').innerText = "waiting...";
         }
+        checkAndPlayAudio(data.category_name);
       })
       .catch(error => {
         console.error('Error retrieving answer:', error)
@@ -209,7 +218,7 @@
       introAudio.play().catch(error => {
         console.error('Error playing intro audio:', error);
       });
-    }, 3000);
+    }, 5000);
   }
 
 </script>
