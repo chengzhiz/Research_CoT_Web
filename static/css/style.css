@@ -5,6 +5,8 @@ body {
     /* Light gray background for readability */
     color: #333333;
     /* Dark text color for contrast */
+    letter-spacing: -0.02em;
+    word-spacing: -0.19em;
 }
 
 
@@ -19,7 +21,6 @@ h6 {
     /* Elegant serif font for titles */
     color: #222222;
     /* Slightly darker heading color */
-    letter-spacing: 0.05em;
     /* Subtle spacing for a clean look */
     text-transform: uppercase;
     /* Adds structure to headings */
@@ -119,7 +120,7 @@ p.card-text strong {
     border-color: #3d2c1c;
 }
 
-#speak-btn:hover, #speak-btn:active {
+#speak-btn:active, #speak-btn.space-pressed {
     background-color: #2a1e14 !important;
     border-color: #2a1e14 !important;
 }

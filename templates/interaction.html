@@ -8,9 +8,9 @@
         <div class="card-body">
           <h5 class="card-title">Ask a yes-or-no Question</h5>
           <p class="card-text">Please press and hold the button for prompting a question</p>
-          <a href="#" id="speak-btn" class="btn btn-primary" onmousedown="startListening()" onmouseup="stopListening()">
-            Press and hold to speak
-          </a>
+          <button id="speak-btn" class="btn btn-primary" disabled>
+            Press the space button to ask a question
+          </button>
           <p class="card-text" id="voice-input"></p>
           <p class="card-text" id="question">Waiting for a question...</p>
           <p class="card-text"><strong>Answer:</strong> <span id="answer">{{ answer }}</span></p>
@@ -30,7 +30,7 @@
   </div>
 </div>
 
-<audio id="intro-audio" src="{{ url_for('static', filename='voice/intro.wav') }}" preload="auto" loop></audio>
+<audio id="intro-audio" src="{{ url_for('static', filename='voice/intro.wav') }}" preload="auto"></audio>
 <audio id="yes-audio" src="{{ url_for('static', filename='voice/yes.wav') }}" preload="auto"></audio>
 <audio id="no-audio" src="{{ url_for('static', filename='voice/no.wav') }}" preload="auto"></audio>
 <audio id="idk-audio" src="{{ url_for('static', filename='voice/idk.wav') }}" preload="auto"></audio>
@@ -47,6 +47,7 @@
   let recognition;
   let isListening = false;
   const speakBtn = document.getElementById("speak-btn");
+  let introAudioTimeoutId;
 
   if ('webkitSpeechRecognition' in window) {
     recognition = new webkitSpeechRecognition();
@@ -64,20 +65,22 @@
 
     recognition.onerror = function (event) {
       console.error('Speech Recognition Error:', event.error);
-      speakBtn.disabled = false;
-      speakBtn.classList.remove("disabled");
     };
   } else {
     alert('Your browser does not support Google Web Speech API. Please use Chrome.');
   }
 
+  let spacePressed = false;
+
   function startListening() {
     if (!recognition || isListening) return;
     isListening = true;
-    speakBtn.disabled = true;
-    speakBtn.classList.add("disabled");
     recognition.start();
     document.querySelectorAll('audio').forEach(audio => audio.pause());
+    document.getElementById('intro-audio').pause();
+    document.getElementById('intro-audio').currentTime = 0;
+    document.getElementById('intro-audio').removeEventListener('ended', resetInterface);
+    clearTimeout(introAudioTimeoutId);
   }
 
   function stopListening() {
@@ -85,6 +88,24 @@
     isListening = false;
     recognition.stop();
   }
+
+  document.addEventListener('keydown', (event) => {
+    if (event.code === 'Space' && !spacePressed) {
+      spacePressed = true;
+      speakBtn.classList.add('space-pressed');
+      speakBtn.innerText = 'Space key pressed';
+      startListening();
+    }
+  });
+
+  document.addEventListener('keyup', (event) => {
+    if (event.code === 'Space') {
+      spacePressed = false;
+      speakBtn.classList.remove('space-pressed');
+      speakBtn.innerText = 'Press the space button to ask a question';
+      stopListening();
+    }
+  });
 
   function checkAndPlayAudio() {
     const answer = document.getElementById('answer').innerText.trim(); //remove the empty texts before and after
@@ -135,6 +156,7 @@
     }
   }
   document.getElementById('reask-audio').addEventListener('ended', resetInterface);
+  document.getElementById('intro-audio').addEventListener('ended', resetInterface);
 
 
   document.getElementById('intro-audio').play();
@@ -180,16 +202,14 @@
     // Stop and reset the audio safely
     introAudio.pause();
     introAudio.currentTime = 0;
+    document.getElementById('intro-audio').addEventListener('ended', resetInterface);
 
-    // Play the intro audio after a 3-second delay
-    setTimeout(() => {
+    // Play the intro audio after a 5-second delay
+    introAudioTimeoutId = setTimeout(() => {
       introAudio.play().catch(error => {
         console.error('Error playing intro audio:', error);
       });
     }, 3000);
-    
-    speakBtn.disabled = false;
-    speakBtn.classList.remove("disabled");
   }
 
 </script>
