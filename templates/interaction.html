@@ -8,8 +8,8 @@
         <div class="card-body">
           <h5 class="card-title">Ask a yes-or-no Question</h5>
           <p class="card-text">Please press and hold the button for prompting a question</p>
-          <button id="speak-btn" class="btn btn-primary" disabled>
-            Press the space button to ask a question
+          <button id="speak-btn" class="btn btn-primary">
+            Press the space bar to ask a question
           </button>
           <p class="card-text" id="voice-input"></p>
           <p class="card-text" id="question">Waiting for a question...</p>
@@ -46,7 +46,9 @@
 <script>
   let recognition;
   let isListening = false;
+  let isResponding = false;
   const speakBtn = document.getElementById("speak-btn");
+  speakBtn.classList.add('btn-enabled'); // Add this line
   let introAudioTimeoutId;
 
   if ('webkitSpeechRecognition' in window) {
@@ -93,7 +95,7 @@
   }
 
   document.addEventListener('keydown', (event) => {
-    if (event.code === 'Space' && !spacePressed) {
+    if (event.code === 'Space' && !spacePressed && !isResponding) {
       spacePressed = true;
       speakBtn.classList.add('space-pressed');
       speakBtn.innerText = 'Space key pressed';
@@ -170,6 +172,9 @@
   document.getElementById('intro-audio').play();
 
   function askChatGPT() {
+    isResponding = true;
+    speakBtn.disabled = true;
+    speakBtn.classList.remove('btn-enabled');
     const userQuestion = document.getElementById('question').innerText;
 
     fetch('/ask-chatgpt', {
@@ -201,6 +206,9 @@
   }
 
   function resetInterface() {
+    isResponding = false;
+    speakBtn.disabled = false;
+    speakBtn.classList.add('btn-enabled');
     document.getElementById('question').innerText = "Waiting for a question...";
     document.getElementById('answer').innerText = "waiting...";
     document.getElementById('category_name').innerText = "waiting...";

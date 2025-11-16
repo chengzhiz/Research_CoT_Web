@@ -93,12 +93,14 @@ button,
 /* Disabled button styling */
 button:disabled,
 .btn:disabled {
-    background-color: #cccccc;
-    /* Light gray for disabled state */
-    color: #999999;
-    /* Dimmed text color */
-    cursor: not-allowed;
-    /* Show a "not allowed" cursor */
+    background-color: #b9b7b7; /* Very light gray for disabled state */
+    color: #e3e3e3; /* Desaturated text color */
+    cursor: not-allowed; /* Show a "not allowed" cursor */
+}
+
+.btn-enabled {
+    background-color: #895c08 !important; /* Bright Orange */
+    color: white !important;
 }
 
 p.card-text strong {
@@ -121,6 +123,12 @@ p.card-text strong {
 }
 
 #speak-btn:active, #speak-btn.space-pressed {
-    background-color: #2a1e14 !important;
+    background-color: #3a2c20 !important;
     border-color: #2a1e14 !important;
+}
+
+#speak-btn:disabled {
+    background-color: #7e7b7b !important;
+    color: #e3e3e3 !important;
+    border-color: #b9b7b7 !important;
 }
